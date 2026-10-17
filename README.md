@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+<div align="center">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🏢 Workspace Compliance
 
-## Available Scripts
+**A role-based compliance tracking platform with review workflows, dashboards and payroll scheduling**
 
-In the project directory, you can run:
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
+<img src="https://img.shields.io/badge/REST_API-02569B?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Google_Sign--In-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
 
-### `npm start`
+<!-- <img src="docs/demo.gif" alt="Demo" width="85%"/> -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+</div>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 📖 Overview
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Workspace Compliance** is a React.js web application for tracking **weekly and monthly compliance** across an organisation. Each user sees a view built for their role, from employees submitting evidence to HR and Payroll teams monitoring non-compliance and acting on it at month-end.
 
-### `npm run build`
+## 👥 Roles
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Role | What they do |
+|---|---|
+| 🧑‍💼 **Employee** | Submits compliance entries and uploads evidence |
+| 🕵️ **Reporting Officer (RO)** | Reviews submissions: **Reviewed**, **Send Back** or **Non-Compliance** |
+| 🧑‍💻 **HR** | Monitors live non-compliance reports with company and location filters |
+| 💰 **Payroll** | Views non-compliance data and handles month-end **Hold / Release** scheduling |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ✨ Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 🔑 **Google Sign-In** authentication
+- 📅 **Weekly and monthly compliance tracking**
+- 📎 **Evidence uploads** with each submission
+- ✅ **RO review workflow:** Reviewed / Send Back / Non-Compliance
+- 📝 **Exception approvals** for special cases
+- 📊 **HR and Payroll dashboards** with live non-compliance reports
+- 🔎 **Company and location filters**
+- 📤 **CSV export** of reports
+- ⏰ **Month-end Hold / Release job scheduling** for payroll
+- 🔌 **REST API** integration
 
-### `npm run eject`
+## 🔄 Review Workflow
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```mermaid
+flowchart LR
+    A[Employee submits compliance + evidence] --> B{Reporting Officer review}
+    B -->|Reviewed| C[Marked compliant]
+    B -->|Send Back| A
+    B -->|Non-Compliance| D[Flagged as non-compliant]
+    D --> E[HR and Payroll dashboards]
+    E --> F[Month-end Hold / Release]
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🛠️ Tech Stack
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Layer | Technology |
+|---|---|
+| Frontend | React.js, [CSS framework] |
+| Auth | Google Sign-In |
+| API | REST APIs ([backend technology]) |
+| Reports | CSV export |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Node.js 18+
+- npm or yarn
+- A Google OAuth Client ID ([how to create one](https://developers.google.com/identity/protocols/oauth2))
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Installation
 
-### Code Splitting
+```bash
+git clone https://github.com/Kashiish134/workspace_compliance.git
+cd workspace_compliance
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Environment variables
 
-### Analyzing the Bundle Size
+Create a `.env` file in the project root:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```env
+REACT_APP_API_BASE_URL=[your backend URL]
+REACT_APP_GOOGLE_CLIENT_ID=[your Google client ID]
+```
 
-### Making a Progressive Web App
+> ✏️ Rename the variables to match what your code actually uses (for example `VITE_` instead of `REACT_APP_` if you use Vite).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Run the app
 
-### Advanced Configuration
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Open `http://localhost:3000` in your browser.
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🔭 Future Improvements
 
-### `npm run build` fails to minify
+- [ ] Email notifications for pending reviews
+- [ ] Audit log of review decisions
+- [ ] Automated reminders before compliance deadlines
+- [ ] Unit and end-to-end tests
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 👩‍💻 Author
+
+**Kashish Aggarwal**
+[GitHub](https://github.com/Kashiish134) · [LinkedIn](https://www.linkedin.com/in/kashish-aggarwal-kashish-aggarwal)
+
+⭐ If you found this project useful, consider giving it a star!
