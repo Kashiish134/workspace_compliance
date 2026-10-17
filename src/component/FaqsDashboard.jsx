@@ -189,9 +189,9 @@ export class FaqsDashboard extends PureComponent {
 				<ol>
 					<li>
 						Visit{" "}
-						<a href="#" style={{ color: "blue" }}>
+						<span style={{ color: "blue" }}>
 							https://jsplconnect.jindalsteel.com/gps411.html
-						</a>
+						</span>
 					</li>
 					:<li>Connect with the 411 champions wrt your locations</li>
 				</ol>

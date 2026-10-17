@@ -16,8 +16,8 @@ import {
 	Tabs,
 	Tab,
 } from "react-bootstrap";
-import { FaTachometerAlt, FaCalendarAlt, FaUsers, FaUser, FaArrowRight, FaSpinner } from "react-icons/fa"; // Import Calendar Icon
-import { FaCircleStop, FaCloudArrowDown, FaHand, FaBan} from "react-icons/fa6";
+import { FaTachometerAlt, FaCalendarAlt, FaUsers, FaUser, FaSpinner } from "react-icons/fa"; // Import Calendar Icon
+
 import { apiCall } from "../api/apiUtil";
 
 function Dashboard() {
@@ -57,7 +57,7 @@ function Dashboard() {
 	const [filterIndex, setFilterIndex] = useState(null);
 	const [fileUploadingFlag, setFileUploadingFlag] = useState(false);
 	
-	const [historyData, setHistoryData] = useState([]);
+	const [, setHistoryData] = useState([]);
 	
 	const navigate = useNavigate();
 
@@ -70,6 +70,7 @@ function Dashboard() {
 		} else {
 			navigate("/");
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [navigate]);
 
 	useEffect(() => {
@@ -85,6 +86,7 @@ function Dashboard() {
 		} else {
 			setDeclarationFlag(false);
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedMonth]);
 
 	useEffect(() => {
@@ -153,15 +155,6 @@ function Dashboard() {
 	};
 
 	// Handle Checkbox Change
-	const handleCheckboxChange = (index, category) => {
-		const updatedCategories = [...categories];
-		if(updatedCategories[index].selfEvidence != null) {
-			updateSelfComplianceStaus(index, category);
-		} else {
-			alert("Please upload evidence");
-		}
-		setCategories(updatedCategories);
-	};
 
 	// Handle File Upload
 	const handleFileUpload = (event, index, category) => {
@@ -192,27 +185,6 @@ function Dashboard() {
 		}
 		alert(response?.message);
 		setShowDeclareModal(false);
-	}
-	const updateSelfComplianceStaus = async(index, category) => {
-		const updatedCategories = [...categories];
-		updatedCategories[index].selfAck = true;
-		updatedCategories[index].selfStatus = "Done";
-		apiCall("/EmployeeCompliance/UpdateSelfStatus", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedCategories[index]),
-        })
-        .then((data) => {
-            //console.log("Backend Response:", data);
-            if (data.success) {
-                setCategories(updatedCategories);
-				alert(data.message);
-            }
-        })
-        .catch((err) => {
-            alert(err);
-            console.error("Error:", err);
-        });
 	}
 
 	const handleUserExceptionRequest = (event, index, category) => {
@@ -349,7 +321,7 @@ function Dashboard() {
 		}
 		let historyData = await apiCall("/EmployeeCompliance/GetComplianceLogs", {
 			method: "POST",
-            headers: { "Content-Type": "application/json" },
+			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(employeeComplianceFilter),
 		});
 		setHistoryData(historyData);
@@ -497,7 +469,7 @@ function Dashboard() {
 				</Row>
 
 				<Tabs activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)} className="mb-3">
-					{(categories ?? []).length == 0 ? (<Tab eventKey="" title="No Content" />) : (<></>)}
+					{(categories ?? []).length === 0 ? (<Tab eventKey="" title="No Content" />) : (<></>)}
 					{(categories?.filter((category) => category.frequency === "Weekly").length > 0) ? (<Tab eventKey="Weekly" title="Weekly" />) : (<></>)}
 					{(categories?.filter((category) => category.frequency === "Monthly").length > 0) ? (<Tab eventKey="Monthly" title="Monthly" />) : (<></>)}
 				</Tabs>
@@ -524,7 +496,7 @@ function Dashboard() {
 												{(category?.category?.toUpperCase() === "GPS411" && category?.sheet411 != null) && (
 													<>
 														<br />
-														<a target="_blank" style={{cursor: "pointer"}} href={category?.sheet411 ?? undefined}>
+														<a target="_blank" rel="noopener noreferrer" style={{cursor: "pointer"}} href={category?.sheet411 ?? undefined}>
 															411 Sheet Link (Click Here)
 														</a>
 													</>
@@ -647,7 +619,7 @@ function Dashboard() {
 												<li>If the above steps also fails, then as a last resort, please upload the weekly spreadsheet manually as supporting evidence.</li>
 											</ol>
 										</li>
-										<li>For Basic support use the <a href="/faqs-page" target="_blank">FAQ section</a> in the portal or visit <a href="https://jsplconnect.jindalsteel.com/gps411.html" target="_blank">https://jsplconnect.jindalsteel.com/gps411.html</a></li>
+										<li>For Basic support use the <a href="/faqs-page" target="_blank" rel="noopener noreferrer">FAQ section</a> in the portal or visit <a href="https://jsplconnect.jindalsteel.com/gps411.html" target="_blank" rel="noopener noreferrer">https://jsplconnect.jindalsteel.com/gps411.html</a></li>
 									</ol>
 								</span>
 							</div>

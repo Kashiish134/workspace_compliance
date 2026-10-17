@@ -12,15 +12,12 @@ import {
 	Table,
 	Form,
 	Container,
-	Modal,
-	Badge,
-	Tooltip,
-	OverlayTrigger, 
+	Modal, 
 	Tabs,
 	Tab
 } from "react-bootstrap";
-import { FaTachometerAlt, FaCheck, FaUser, FaCalendarAlt, FaInfoCircle, FaPaperPlane, FaReply, FaExternalLinkAlt, FaUndoAlt, FaSpinner } from "react-icons/fa";
-import { FaCircleStop, FaCloudArrowDown, FaHand, FaBan} from "react-icons/fa6";
+import { FaTachometerAlt, FaCheck, FaUser, FaCalendarAlt, FaExternalLinkAlt, FaUndoAlt, FaSpinner } from "react-icons/fa";
+import { FaCloudArrowDown} from "react-icons/fa6";
 import { apiCall } from "../api/apiUtil";
 
 function Ro() {
@@ -50,10 +47,8 @@ function Ro() {
 	const [selectedTab, setSelectedTab] = useState("");
 	// Define dynamic table data
 	const [employeeCompliances, setEmployeeCompliances] = useState([]);
-	const [employeeNonCompliances, setEmployeeNonCompliances] = useState([]);
 
 	// Define state for dropdown selection
-	const [selectedRoData, setSelectedRoData] = useState();
 		//tableData.reduce((acc, item) => ({ ...acc, [item.id]: "Pending" }), {})
 	
 	const [complianceCategoryWeeks, setComplianceCategoryWeeks] = useState([]);
@@ -65,8 +60,8 @@ function Ro() {
 
 	// Modal State
 	const [showModal, setShowModal] = useState(false);
-	const [modalTitle, setModalTitle] = useState("");
-	const [modalContent, setModalContent] = useState("");
+	const [modalTitle] = useState("");
+	const [modalContent] = useState("");
 
 	const [showROActionModal, setShowROActionModal] = useState(false);
 
@@ -97,6 +92,7 @@ function Ro() {
 			setEmployeeCompliances([]);
 			getROCompliance(globalCode, selectedTab);
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedTab, selectedMonth]);
 
 	const getROCompliance = (globalCode, type) => {
@@ -166,25 +162,9 @@ function Ro() {
 	// };
 
 	// Handle dropdown change
-	const handleDropdownChange = (id, value) => {
-		setSelectedRoData((prev) => ({
-			...prev,
-			[id]: value,
-		}));
-	};
 	// Function to handle modal opening
-	const handleShowModal = (title, content) => {
-		setModalTitle(title);
-		setModalContent(content);
-		setShowModal(true);
-	};
 
 	// Modify the function to handle RO comments modal
-	const handleShowRoComments = (name, comment) => {
-		setModalTitle(`RO Comments - ${name}`);
-		setModalContent(comment);
-		setShowModal(true);
-	};
 	
 	const handleROAction = (eIndex, cIndex, wIndex, employeeComplianceId) => {
 		let updatedEmployeeComplianceUpdateIndex = {};
@@ -207,13 +187,13 @@ function Ro() {
 			RoAck: true
 		};
 		apiCall("/EmployeeCompliance/UpdateROStatus", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(empComplaince),
-		})
-		.then((data) => {
-			//console.log("Backend Response:", data);
-			if (data.success) {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(empComplaince),
+        })
+        .then((data) => {
+            //console.log("Backend Response:", data);
+            if (data.success) {
 				alert(data.message);
 				setShowROActionModal(false);
 
@@ -231,16 +211,16 @@ function Ro() {
 				// if(updatedEmployeeCompliances.length > 0) {
 					
 				// }
-			} else {				
+            } else {				
 				alert(data.message);
 			}
 			setIsModalFormSubmissionStatus(false);
-		})
-		.catch((err) => {
-			alert(err);
-			console.error("Error:", err);
+        })
+        .catch((err) => {
+            alert(err);
+            console.error("Error:", err);
 			setIsModalFormSubmissionStatus(false);
-		});
+        });
 	}
 
 	const handleExceptionalApprovalModal = (index, empCompliance) => {
@@ -355,14 +335,14 @@ function Ro() {
 					</Col>
 				</Row>
 				
-				{(weekView == 0 && monthView == 0) ? (<Tabs  className="mb-3"><Tab eventKey="" title="No Content" /></Tabs>) : (<></>)}					
+				{(Number(weekView) === 0 && Number(monthView) === 0) ? (<Tabs  className="mb-3"><Tab eventKey="" title="No Content" /></Tabs>) : (<></>)}					
 				<Tabs activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)} className="mb-3" >
 					{(weekView > 0) ? (<Tab eventKey="Weekly" title={<>Weekly <span className="badge bg-secondary text-light ms-2">{weeklyPending}</span></>} />) : (<></>)}
 					{(monthView > 0) ? (<Tab eventKey="Monthly" title={<>Monthly <span className="badge bg-secondary text-light ms-2">{monthlyPending}</span></>} />) : (<></>)}
 					{(weekView > 0 || monthView > 0) ? (<Tab eventKey="Non-Compliance" title={<>Non-Compliance <span className="badge bg-secondary text-light ms-2">{nonCompliancePending}</span></>} />) : (<></>)}
 				</Tabs>
 				
-				{(selectedTab == "Weekly") && complianceCategoryWeeks?.map((cw, index) => (
+				{(selectedTab === "Weekly") && complianceCategoryWeeks?.map((cw, index) => (
 						<Card key={index} style={{marginTop: 10}}>
 							<Card.Header>
 								{cw?.category}
@@ -408,15 +388,15 @@ function Ro() {
 														<td className="text-center fw-bold">
 															{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) != null && (
 															<>
-																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck ?? false) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "DECLARED") && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck ?? false)) && (<FaCheck size={20} className="ms-1 text-success" />)}
-																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "ON LEAVE")) && (<span style={{width: 90}} className="btn btn-sm btn-success">On Leave</span>)}
-																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "DECLARED") && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
+																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck ?? false) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() === "DECLARED") && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck ?? false)) && (<FaCheck size={20} className="ms-1 text-success" />)}
+																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() === "ON LEAVE")) && (<span style={{width: 90}} className="btn btn-sm btn-success">On Leave</span>)}
+																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() === "DECLARED") && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
 																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
 																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck)) && (<span style={{width: 90}} className="btn btn-sm btn-info">Pending</span>)}
 																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 90}} className="btn btn-sm btn-info">Pending</span>)}
 																{(cw?.category?.toUpperCase() === "GPS411" && employeeCompliance?.[cw?.category]?.[week?.week]?.sheet411 != null) && 
 																	(
-																		<a target="_blank" href={employeeCompliance?.[cw?.category]?.[week?.week]?.sheet411}>
+																		<a target="_blank" rel="noopener noreferrer" href={employeeCompliance?.[cw?.category]?.[week?.week]?.sheet411}>
 																			<FaExternalLinkAlt size={15} className="ms-1 fa-2x text-success" />
 																		</a>
 																	)
@@ -431,8 +411,8 @@ function Ro() {
 															{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) != null && (
 																<>
 																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} className="btn btn-sm btn-success">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
-																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></button></>)}
+																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></button></>)}
 																{!(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck) && (<><span style={{width: 120}} className="btn btn-sm btn-warning" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Pending</span></>)}
 																</>
 															)}
@@ -442,7 +422,7 @@ function Ro() {
 														</td>
 														<td className="text-center">
 															{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "") !== "") && (															
-																<a target="_blank" href={JSON.parse(employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
+																<a target="_blank" rel="noopener noreferrer" href={JSON.parse(employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
 																	Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 																</a>
 															)}
@@ -459,7 +439,7 @@ function Ro() {
 					)
 				)}
 				
-				{(selectedTab == "Monthly") && ((complianceCategories ?? []).length > 0) && (
+				{(selectedTab === "Monthly") && ((complianceCategories ?? []).length > 0) && (
 				<Card>
 					<Card.Body>
 						{/* Responsive Table */}
@@ -527,7 +507,7 @@ function Ro() {
 														{(!(employeeCompliance[category?.category]?.selfAck) && (employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 120}} className="btn btn-sm btn-info">Pending</span>)}
 														{(category?.category?.toUpperCase() === "GPS411" && employeeCompliance[category?.category]?.sheet411 != null) && 
 															(
-																<a target="_blank" href={employeeCompliance[category?.category]?.sheet411}>
+																<a target="_blank" rel="noopener noreferrer" href={employeeCompliance[category?.category]?.sheet411}>
 																	<FaExternalLinkAlt size={15} className="ms-1 fa-2x text-success" />
 																</a>
 															)
@@ -542,8 +522,8 @@ function Ro() {
 													{employeeCompliance[category?.category] != null && (
 														<>
 														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} className="btn btn-sm btn-success">{employeeCompliance[category?.category]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
-														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance[category?.category]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance[category?.category]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance[category?.category]?.roStatus}</span><br /><button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></button></>)}
+														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance[category?.category]?.roStatus}</span><br /><button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></button></>)}
 														{!(employeeCompliance[category?.category]?.roAck) && (<><span style={{width: 120}} className="btn btn-sm btn-warning" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Pending</span></>)}
 														</>
 													)}
@@ -553,7 +533,7 @@ function Ro() {
 												</td>
 												<td className="text-center">
 													{((employeeCompliance[category?.category]?.selfEvidence ?? "") !== "") && (															
-														<a target="_blank" href={JSON.parse(employeeCompliance[category?.category]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
+														<a target="_blank" rel="noopener noreferrer" href={JSON.parse(employeeCompliance[category?.category]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 													)}
@@ -569,7 +549,7 @@ function Ro() {
 				</Card>
 				)}
 
-				{(selectedTab == "Non-Compliance") && ((employeeCompliances ?? []).length > 0) && (
+				{(selectedTab === "Non-Compliance") && ((employeeCompliances ?? []).length > 0) && (
 					<Card>
 						<Card.Body>
 							{/* Responsive Table */}
@@ -600,7 +580,7 @@ function Ro() {
 												{(employeeCompliance?.selfExceptionalAck ?? false) ? (
 													<>
 														Requested By User  <br /> {
-														<a target="_blank" href={JSON.parse(employeeCompliance?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
+														<a target="_blank" rel="noopener noreferrer" href={JSON.parse(employeeCompliance?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 														}
@@ -614,7 +594,7 @@ function Ro() {
 												{(employeeCompliance?.roExceptionalStatus?.toUpperCase() === "APPROVED") && (
 													<>
 														<br /> {
-														<a target="_blank" href={JSON.parse(employeeCompliance?.roExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
+														<a target="_blank" rel="noopener noreferrer" href={JSON.parse(employeeCompliance?.roExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 														}

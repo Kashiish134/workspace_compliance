@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col, Button, Card, Modal, Form, Table, Tabs, Tab } from "react-bootstrap";
-import { FaUser, FaUsers, FaTachometerAlt, FaFilePdf, FaInfoCircle } from "react-icons/fa"; // Import PDF icon
+import { FaUser, FaUsers, FaTachometerAlt } from "react-icons/fa"; // Import PDF icon
 import DataTable from "react-data-table-component";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,21 +12,20 @@ import { apiCall } from "../api/apiUtil";
 function Payroll() {
 	const [globalCode, setGlobalCode] = useState(null);
 	const [userRoles, setUserRoles] = useState([]);
-	const [pendingCount, setPendingCount] = useState(0);
 	const [nonComplianceCount, setNonComplianceCount] = useState(0);
 	const [actionProgramButtonDisabled, setActionProgramButtonDisabled] = useState(false);
 	const [complianceCount, setComplianceCount] = useState(0);
 	const [showModal, setShowModal] = useState(false);
-	const [selectedCategory, setSelectedCategory] = useState("");
+	const [selectedCategory] = useState("");
 	const [selectedMonth, setSelectedMonth] = useState(new Date()); // State for month filter
 	const [showROModal, setShowROModal] = useState(false);
-	const [isCompliance, setIsCompliance] = useState(false);
-	const [selectedROComments, setSelectedROComments] = useState("");
+	const [isCompliance] = useState(false);
+	const [selectedROComments] = useState("");
 	const [tableData, setTableData] = useState([]);
 
 	const [selectedTab, setSelectedTab] = useState("EmployeeNonCompliance");
 
-	const [jobHistory, setJobHistory] = useState([]);
+	const [, setJobHistory] = useState([]);
 	const [showHistoryModal, setShowHistoryModal] = useState(false);
 	const [modalTitle, setModalTitle] = useState("");
 	const [modalContent, setModalContent] = useState("");
@@ -43,20 +42,22 @@ function Payroll() {
 		} else {
 			navigate("/");
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [navigate]);
 
 	useEffect(() => {
 		// setNonComplianceCount(0);
 		// setComplianceCount(0);
-		if(selectedTab == "EmployeeNonCompliance") {
+		if(selectedTab === "EmployeeNonCompliance") {
 			getEmployeeComplianceMonthlyFinal();
-		} else if(selectedTab == "EmployeeComplianceConversion") {
+		} else if(selectedTab === "EmployeeComplianceConversion") {
 			getEmployeeComplianceConversion();
-		} else if(selectedTab == "RONonCompliance") {
+		} else if(selectedTab === "RONonCompliance") {
 			getROComplianceMonthlyFinal();
-		} else if(selectedTab == "ROComplianceConversion") {
+		} else if(selectedTab === "ROComplianceConversion") {
 			getROComplianceConversion();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedMonth, selectedTab, isCompliance, userRoles]);
 
 	const getEmployeeComplianceMonthlyFinal = () => {
@@ -210,7 +211,7 @@ function Payroll() {
 								<td style={{textWrap: "auto"}}>{record?.backgroundJobDesc}</td>
 								<td>{(record?.startedOn != null) ? moment(record?.startedOn).format("DD/MMM/YYYY HH:mm") : "-"}</td>
 								<td>{(record?.completedOn != null) ? moment(record?.completedOn).format("DD/MMM/YYYY HH:mm") : "-"}</td>
-								<td>{(record?.isProcessed != null) ? ((record?.isProcessed == false) ? "In Process" : "Completed") : "Pending"}</td>
+								<td>{(record?.isProcessed != null) ? ((record?.isProcessed === false) ? "In Process" : "Completed") : "Pending"}</td>
 								<td>{record?.scheduledBy}</td>
 								<td>{(record?.addedOn != null) ? moment(record?.addedOn).format("DD/MMM/YYYY HH:mm") : "-"}</td>
 								<td>{(record?.updatedOn != null) ? moment(record?.updatedOn).format("DD/MMM/YYYY HH:mm") : "-"}</td>
@@ -253,6 +254,8 @@ function Payroll() {
 			case "ROComplianceConversion":
 				backgroundJobCode = "RunRORelease";
 				backgroundJobDesc = "Run RO Release Program By Payroll Team";
+				break;
+			default:
 				break;
 		}
 		let actionSchedule = {
@@ -299,27 +302,13 @@ function Payroll() {
 		link.click();
 	};
 
-	const handlePrint = () => {
-		window.print();
-	};
 
-	const handleShowModal = (category) => {
-		setSelectedCategory(category);
-		setShowModal(true);
-	};
 
 	const handleCloseModal = () => {
 		setShowModal(false);
 	};
 
-	const handleMonthChange = (e) => {
-		setSelectedMonth(e.target.value);
-	};
 
-	const handleShowROModal = (comments) => {
-		setSelectedROComments(comments);
-		setShowROModal(true);
-	};
 
 	const handleCloseROModal = () => {
 		setShowROModal(false);
@@ -454,25 +443,25 @@ function Payroll() {
 			</Tabs>
 			<Row className="mb-2 align-items-center">
 				<Col md={6}>
-					{(selectedTab == "EmployeeNonCompliance") && (
+					{(selectedTab === "EmployeeNonCompliance") && (
 						<>
 							<h5 className="mb-0">Non Compliance HOLD Employees</h5>
 							<span style={{ fontSize: "13px" }}>HOLD summary will show after action taken by Payroll team at last working day of the month.</span>
 						</>
 					)}
-					{(selectedTab == "EmployeeComplianceConversion") && (
+					{(selectedTab === "EmployeeComplianceConversion") && (
 						<>
 							<h5 className="mb-0">Compliance Conversion Employees</h5>
 							<span style={{ fontSize: "13px" }}>This list will be updated by payroll team thrice a month i.e. 10th, 20th & last working day of the month.</span>
 						</>
 					)}
-					{(selectedTab == "RONonCompliance") && (
+					{(selectedTab === "RONonCompliance") && (
 						<>
 							<h5 className="mb-0">Non Compliance HOLD ROs</h5>
 							<span style={{ fontSize: "13px" }}>This list will be updated by payroll team before TVP release.</span>
 						</>
 					)}
-					{(selectedTab == "ROComplianceConversion") && (
+					{(selectedTab === "ROComplianceConversion") && (
 						<>
 							<h5 className="mb-0">Compliance Conversion ROs</h5>
 							<span style={{ fontSize: "13px" }}>This list will be updated by payroll team before TVP release.</span>
@@ -484,10 +473,10 @@ function Payroll() {
 						Job History
 					</Button>
 					<Button variant="warning" size="sm" className="me-2" onClick={saveBackgroundAction} disabled={actionProgramButtonDisabled}>
-						{(selectedTab == "EmployeeNonCompliance") && (<>Run Employee Hold Program</>)}
-						{(selectedTab == "EmployeeComplianceConversion") && (<>Run Employee Release Program</>)}
-						{(selectedTab == "RONonCompliance") && (<>Run RO Hold Program</>)}
-						{(selectedTab == "ROComplianceConversion") && (<>Run RO Release Program</>)}
+						{(selectedTab === "EmployeeNonCompliance") && (<>Run Employee Hold Program</>)}
+						{(selectedTab === "EmployeeComplianceConversion") && (<>Run Employee Release Program</>)}
+						{(selectedTab === "RONonCompliance") && (<>Run RO Hold Program</>)}
+						{(selectedTab === "ROComplianceConversion") && (<>Run RO Release Program</>)}
 					</Button>
 					<Button variant="info" size="sm" className="me-2" onClick={handleDownload}>
 						Export to Excel

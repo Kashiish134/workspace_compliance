@@ -10,7 +10,7 @@ import "../App.css"; // Adjust path based on your structure
 
 function NavbarComponent() {
 
-	const [emailId, setEmailId] = useState(null);
+	const [, setEmailId] = useState(null);
 	const [userName, setUserName] = useState(null);
 	const [globalCode, setGlobalCode] = useState(null);
 	const [roEmailId, setRoEmailId] = useState(null);

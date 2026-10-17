@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { apiCall, isDemoMode, isSampleMode } from "../api/apiUtil";
+import { apiCall, getLocalApiUrl, isDemoMode, isSampleMode } from "../api/apiUtil";
 
 const DEMO_LOGINS = [
 	{ label: "Employee", code: "employee", variant: "primary" },
@@ -34,7 +34,11 @@ const LoginPage = () => {
 			}
 		})
 		.catch((err) => {
-			alert(err);
+			if (isSampleMode() && !isDemoMode()) {
+				alert(`Cannot reach the local API at ${getLocalApiUrl()}.\nStart it with "npm run dev" (API + app) or "npm run server" (API only).`);
+			} else {
+				alert(err);
+			}
 			console.error("Error:", err);
 		});
 	};
@@ -83,7 +87,7 @@ const LoginPage = () => {
 					<a href="/faqs-page" target="_blank" className="btn btn-danger">FAQs</a>
 				</div>
 				<div className="d-flex justify-content-center mt-1">
-					<a href="https://app.powerbi.com/groups/me/reports/f3109d4e-6498-4d20-89bd-8603e999e99b/f4d6e0ee91cbba1382d4?ctid=dceafa58-89d9-419f-8d1a-cc0295447f38&experience=power-bi" target="_blank" className="btn btn-success">Power BI Report</a>
+					<a href="https://app.powerbi.com/groups/me/reports/f3109d4e-6498-4d20-89bd-8603e999e99b/f4d6e0ee91cbba1382d4?ctid=dceafa58-89d9-419f-8d1a-cc0295447f38&experience=power-bi" target="_blank" rel="noopener noreferrer" className="btn btn-success">Power BI Report</a>
 				</div>
 			</form>
 		</div>

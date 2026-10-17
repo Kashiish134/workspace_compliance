@@ -5,7 +5,14 @@ const API_GENERATE_PDF_BASE_URL = process.env.REACT_APP_API_PDF_GENERATION_API;
 export const isDemoMode = () => process.env.REACT_APP_DEMO_MODE === "true";
 
 // Local sample backend (backend/server.js): set REACT_APP_LOCAL_API_URL, e.g. http://localhost:7079/api
-export const getLocalApiUrl = () => (process.env.REACT_APP_LOCAL_API_URL || "").replace(/\/+$/, "");
+// Defaults to http://localhost:7079/api when the page itself is served from localhost, so it works even
+// if the .env file was not picked up. Set REACT_APP_LOCAL_API_URL=off to use a real backend instead.
+export const getLocalApiUrl = () => {
+	const configured = (process.env.REACT_APP_LOCAL_API_URL || "").trim();
+	if (configured.toLowerCase() === "off") return "";
+	if (configured) return configured.replace(/\/+$/, "");
+	return ["localhost", "127.0.0.1"].includes(window.location.hostname) ? "http://localhost:7079/api" : "";
+};
 
 // True when the app runs against sample data (demo mode or the local sample API) instead of the
 // company HRMS/Google backend. In that case the login page shows quick-login buttons.

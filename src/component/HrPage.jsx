@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Row, Col, Button, Card, Form, Modal, Table, ButtonToolbar, ToggleButtonGroup, ToggleButton, Tabs, Tab } from "react-bootstrap";
+import { Row, Col, Button, Card, Form, Modal, Table, Tabs, Tab } from "react-bootstrap";
 import { FaUser, FaUsers, FaTachometerAlt, FaInfoCircle } from "react-icons/fa";
 import DataTable from "react-data-table-component";
 import DatePicker from "react-datepicker";
@@ -15,7 +15,7 @@ function HrPage() {
 	const [totelEmployeeCount, setTotalEmployeeCount] = useState(0);
 	const [compliancedCount, setCompliancedCount] = useState(0);
 	const [nonCompliancedCount, setNonCompliancedCount] = useState(0);
-	const [isCompliance, setIsCompliance] = useState(false);
+	const [isCompliance] = useState(false);
 	const [selectedMonth, setSelectedMonth] = useState(new Date());
 
 	const [selectedTab, setSelectedTab] = useState("EmployeeNonCompliance");
@@ -23,10 +23,9 @@ function HrPage() {
 	const [showModal, setShowModal] = useState(false);
 	const [modalTitle, setModalTitle] = useState("");
 	const [modalContent, setModalContent] = useState("");
-	const [selectedCategory, setSelectedCategory] = useState("");
 
 	const [tableData, setTableData] = useState([]);
-	const [empConditions, setEmpConditions] = useState([]);
+	const [, setEmpConditions] = useState([]);
 
 	const [empViewEndPoint, setEmpViewEndPoint] = useState("GetEmployeeComplianceLiveStatus");
 	const [empTextHeader, setEmpTextHeader] = useState("Employee Non-Compliance - LIVE REPORT");
@@ -48,32 +47,35 @@ function HrPage() {
 		} else {
 			navigate("/");
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [navigate]);
 
 	useEffect(() => {
 		setTableData([]);
 		getEmployeeComplianceMonthlyFinal();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [empViewEndPoint])
 
 	useEffect(() => {
 		setTableData([]);
-		if(selectedTab == "EmployeeNonCompliance") {
+		if(selectedTab === "EmployeeNonCompliance") {
 			getEmployeeComplianceMonthlyFinal();
-		} else if(selectedTab == "ROActionSummary") {
+		} else if(selectedTab === "ROActionSummary") {
 			getRoSummaryMonthly(allFlag);
-		} else if(selectedTab == "ROHoldList") {
+		} else if(selectedTab === "ROHoldList") {
 			getRONonComplianceMonthlyFinal();
-		} else if(selectedTab == "EmployeeComplianceConversion") {
+		} else if(selectedTab === "EmployeeComplianceConversion") {
 			getEmployeeComplianceConversion();
-		} else if(selectedTab == "ROComplianceConversion") {
+		} else if(selectedTab === "ROComplianceConversion") {
 			getROComplianceConversion();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedMonth, selectedTab, isCompliance, allFlag, userRoles]);
 
 	const getEmployeeComplianceMonthlyFinal = () => {
 		if(Array.isArray(userRoles)) {
 			let filter = {
-				isCompliance: (isCompliance == "true") ? true : false,
+				isCompliance: (isCompliance === "true") ? true : false,
 				year: moment(selectedMonth).format("YYYY"),
 				month: moment(selectedMonth).format("M"),
 				orgUnits: [...new Set(userRoles.map(item => item.orgUnit).filter(e => e !== null && e !== undefined))],
@@ -224,18 +226,10 @@ function HrPage() {
 		}
 	}
 
-	const handlePendingComplianceChange = (value) => {
-		console.log("handlePendingComplianceChange", value);
-		setAllFlag(value);
-	}
 
-	const handleComplianceChange = (value) => {
-		console.log("handleComplianceChange", value);
-		setIsCompliance(value === "true");
-	}
 
 	const handleEmpView = () => {
-		if(empTextButton == "View Hold Report") {
+		if(empTextButton === "View Hold Report") {
 			setEmpViewEndPoint("GetEmployeeNonComplianceListByMonth")
 			setEmpTextHeader("Employee Non-Compliance - HOLD REPORT");
 			setEmpTextButton("View Live Report");
@@ -247,7 +241,7 @@ function HrPage() {
 	}
 
 	const handleROView = () => {
-		if(roTextButton == "View All RO Summary") {
+		if(roTextButton === "View All RO Summary") {
 			setAllFlag("all");
 			setRoTextHeader("All RO Summary - LIVE REPORT");
 			setRoTextButton("View Non-Compliance RO Summary");
@@ -318,9 +312,6 @@ function HrPage() {
 	};
 
 	// Function to handle printing
-	const handlePrint = () => {
-		window.print();
-	};
 	
 	// Search Filters State
 	const [filters, setFilters] = useState({
@@ -335,23 +326,6 @@ function HrPage() {
 	});
 
 	// Define custom styles for the DataTable
-	const customStyles = {
-		headCells: {
-			style: {
-				fontSize: "16px", // Custom font size for header
-				fontWeight: "bold", // Bold text for header
-				backgroundColor: "#f4f4f4", // Light background color for the header
-				color: "#333", // Text color
-				textAlign: "center", // Center align the text
-			},
-		},
-		cells: {
-			style: {
-				fontSize: "14px", // Adjust cell text size
-				padding: "10px", // Add padding for readability
-			},
-		},
-	};
 	// Define table columns
 	const columns = [
 		{ name: "#", selector: (row, index) => index + 1, sortable: false },
@@ -568,7 +542,7 @@ function HrPage() {
 			</Tabs>
 						
 			{/* Search Filters */}
-			{(selectedTab == "EmployeeNonCompliance") && (
+			{(selectedTab === "EmployeeNonCompliance") && (
 			<Card className="mt-3">
 				<Card.Body>
 					{/* Header Row with Title & Buttons */}
@@ -691,7 +665,7 @@ function HrPage() {
 				</Card.Body>
 			</Card>
 			)}
-			{(selectedTab == "ROActionSummary") && (
+			{(selectedTab === "ROActionSummary") && (
 			<Card className="mt-3">
 				<Card.Body>
 					{/* Header Row with Title & Buttons */}
@@ -729,7 +703,7 @@ function HrPage() {
 				</Card.Body>
 			</Card>
 			)}
-			{(selectedTab == "ROHoldList") && (
+			{(selectedTab === "ROHoldList") && (
 			<Card className="mt-3">
 				<Card.Body>
 					{/* Header Row with Title & Buttons */}
@@ -830,7 +804,7 @@ function HrPage() {
 				</Card.Body>
 			</Card>
 			)}
-			{(selectedTab == "EmployeeComplianceConversion") && (
+			{(selectedTab === "EmployeeComplianceConversion") && (
 			<Card className="mt-3">
 				<Card.Body>
 					{/* Header Row with Title & Buttons */}
@@ -931,7 +905,7 @@ function HrPage() {
 				</Card.Body>
 			</Card>
 			)}
-			{(selectedTab == "ROComplianceConversion") && (
+			{(selectedTab === "ROComplianceConversion") && (
 			<Card className="mt-3">
 				<Card.Body>
 					{/* Header Row with Title & Buttons */}
