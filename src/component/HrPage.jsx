@@ -68,7 +68,7 @@ function HrPage() {
 		} else if(selectedTab == "ROComplianceConversion") {
 			getROComplianceConversion();
 		}
-	}, [selectedMonth, selectedTab, isCompliance, allFlag]);
+	}, [selectedMonth, selectedTab, isCompliance, allFlag, userRoles]);
 
 	const getEmployeeComplianceMonthlyFinal = () => {
 		if(Array.isArray(userRoles)) {

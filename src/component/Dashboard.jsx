@@ -286,7 +286,7 @@ function Dashboard() {
 							<tbody>
 								<td>{category?.selfExceptionalAck ? "Yes" : "-"}</td>
 								<td>{category?.selfExceptionalEvidence != null ? (
-									<a href={JSON.parse(category?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"} target="_blank" rel="noopener noreferrer">{"View File"}</a>
+									<a href={JSON.parse(category?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? undefined} target="_blank" rel="noopener noreferrer">{"View File"}</a>
 								) : (
 									"-"
 								)}
@@ -294,7 +294,7 @@ function Dashboard() {
 								<td>{(category?.selfExceptionalAckOn != null) ? moment(category?.selfExceptionalAckOn).format("DD/MMM/YYYY HH:mm") : "-"}</td>
 								<td>{category?.roExceptionalStatus ?? "Pending At RO"}</td>
 								<td>{category?.roExceptionalEvidence != null ? (
-									<a href={JSON.parse(category?.roExceptionalEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"} target="_blank" rel="noopener noreferrer">{"View File"}</a>
+									<a href={JSON.parse(category?.roExceptionalEvidence ?? "{}")?.fileUrl ?? undefined} target="_blank" rel="noopener noreferrer">{"View File"}</a>
 								) : (
 									"-"
 								)}
@@ -320,7 +320,7 @@ function Dashboard() {
 						<tr>
 							<td>{category?.selfAck ? "Yes" : "-"}</td>
 							<td>{category?.selfEvidence != null ? (
-								<a href={JSON.parse(category?.selfEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"} target="_blank" rel="noopener noreferrer">{"View File"}</a>
+								<a href={JSON.parse(category?.selfEvidence ?? "{}")?.fileUrl ?? undefined} target="_blank" rel="noopener noreferrer">{"View File"}</a>
 							) : (
 								"-"
 							)}
@@ -524,7 +524,7 @@ function Dashboard() {
 												{(category?.category?.toUpperCase() === "GPS411" && category?.sheet411 != null) && (
 													<>
 														<br />
-														<a target="_blank" style={{cursor: "pointer"}} href={category?.sheet411 ?? "javascript:void(0);"}>
+														<a target="_blank" style={{cursor: "pointer"}} href={category?.sheet411 ?? undefined}>
 															411 Sheet Link (Click Here)
 														</a>
 													</>
@@ -628,7 +628,7 @@ function Dashboard() {
 									</p>
 							  </form>
 							)}
-							<p className="pfont d-flex align-items-start">
+							<div className="pfont d-flex align-items-start">
 								<span style={{ fontSize: "0.875rem" }}>
 									<b>PLEASE NOTE:</b> <br />
 									<ol>
@@ -650,7 +650,7 @@ function Dashboard() {
 										<li>For Basic support use the <a href="/faqs-page" target="_blank">FAQ section</a> in the portal or visit <a href="https://jsplconnect.jindalsteel.com/gps411.html" target="_blank">https://jsplconnect.jindalsteel.com/gps411.html</a></li>
 									</ol>
 								</span>
-							</p>
+							</div>
 						</div>
 					</Card.Body>
 

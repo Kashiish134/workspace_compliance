@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Home from "./pages/Home.jsx";
 import RoDashboard from "./pages/RoDashboard";
 import HrDashboard from "./pages/HrDashboard.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
@@ -14,10 +13,16 @@ import NavbarComponent from "./component/NavbarComponent.jsx";
 import LoginPage from "./component/LoginPage.jsx";
 import Login from "./pages/Login.jsx";
 import GoogleAuth from "./component/GoogleAuth";
+import { isDemoMode, isSampleMode } from "./api/apiUtil";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      {isSampleMode() && (
+        <div className="bg-warning text-dark text-center small py-1" data-testid="demo-banner">
+          <b>{isDemoMode() ? "Demo mode" : "Sample API mode"}</b>: {isDemoMode() ? "in-browser sample data, no backend required. Signing out resets it." : "connected to the local backend (npm run server). POST /api/reset restores the original data."}
+        </div>
+      )}
       <NavbarComponent />
       <div className="">
         <Routes>

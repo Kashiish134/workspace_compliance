@@ -207,13 +207,13 @@ function Ro() {
 			RoAck: true
 		};
 		apiCall("/EmployeeCompliance/UpdateROStatus", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(empComplaince),
-        })
-        .then((data) => {
-            //console.log("Backend Response:", data);
-            if (data.success) {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(empComplaince),
+		})
+		.then((data) => {
+			//console.log("Backend Response:", data);
+			if (data.success) {
 				alert(data.message);
 				setShowROActionModal(false);
 
@@ -231,16 +231,16 @@ function Ro() {
 				// if(updatedEmployeeCompliances.length > 0) {
 					
 				// }
-            } else {				
+			} else {				
 				alert(data.message);
 			}
 			setIsModalFormSubmissionStatus(false);
-        })
-        .catch((err) => {
-            alert(err);
-            console.error("Error:", err);
+		})
+		.catch((err) => {
+			alert(err);
+			console.error("Error:", err);
 			setIsModalFormSubmissionStatus(false);
-        });
+		});
 	}
 
 	const handleExceptionalApprovalModal = (index, empCompliance) => {
@@ -363,7 +363,7 @@ function Ro() {
 				</Tabs>
 				
 				{(selectedTab == "Weekly") && complianceCategoryWeeks?.map((cw, index) => (
-						<Card style={{marginTop: 10}}>
+						<Card key={index} style={{marginTop: 10}}>
 							<Card.Header>
 								{cw?.category}
 							</Card.Header>
@@ -388,32 +388,32 @@ function Ro() {
 											</tr>
 											<tr>															
 											{cw.weeks?.map((week, index) => (
-												<>
+												<React.Fragment key={index}>
 													<th className="text-center">Self</th>
 													<th className="text-center">RO</th>
 													<th className="text-center">Evidence</th>
-												</>
+												</React.Fragment>
 											))}
 											</tr>
 										</thead>
 										<tbody>
 											{employeeCompliances?.map((employeeCompliance, index) => (
-											<tr>
+											<tr key={index}>
 												<td style={{ position: "sticky", left: 0, zIndex: 2, width: "80px", minWidth: "80px", maxWidth: "80px", textAlign: "center", }}>{index + 1} </td>
 												<td style={{ position: "sticky", left: "80px", zIndex: 2, width: "200px", minWidth: "200px", maxWidth: "200px",}}>
 													{employeeCompliance?.Name} <br /> ({employeeCompliance?.GlobalCode})
 												</td>
 												{cw.weeks?.map((week, cindex) => (
-													<>
+													<React.Fragment key={cindex}>
 														<td className="text-center fw-bold">
 															{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) != null && (
 															<>
 																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck ?? false) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "DECLARED") && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck ?? false)) && (<FaCheck size={20} className="ms-1 text-success" />)}
-																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "ON LEAVE")) && (<span style={{width: 90}} class="btn btn-sm btn-success">On Leave</span>)}
+																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "ON LEAVE")) && (<span style={{width: 90}} className="btn btn-sm btn-success">On Leave</span>)}
 																{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.selfStatus?.toUpperCase() == "DECLARED") && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
 																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
-																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck)) && (<span style={{width: 90}} class="btn btn-sm btn-info">Pending</span>)}
-																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 90}} class="btn btn-sm btn-info">Pending</span>)}
+																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && !(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck)) && (<span style={{width: 90}} className="btn btn-sm btn-info">Pending</span>)}
+																{(!(employeeCompliance?.[cw?.category]?.[week?.week]?.selfAck) && (employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 90}} className="btn btn-sm btn-info">Pending</span>)}
 																{(cw?.category?.toUpperCase() === "GPS411" && employeeCompliance?.[cw?.category]?.[week?.week]?.sheet411 != null) && 
 																	(
 																		<a target="_blank" href={employeeCompliance?.[cw?.category]?.[week?.week]?.sheet411}>
@@ -422,7 +422,7 @@ function Ro() {
 																	)
 																}
 																{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) == null && (
-																	<span style={{width: 90}} class="btn btn-sm btn-disabled">Not Required</span>
+																	<span style={{width: 90}} className="btn btn-sm btn-disabled">Not Required</span>
 																)}
 															</>
 															)}
@@ -430,24 +430,24 @@ function Ro() {
 														<td className="text-center">
 															{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) != null && (
 																<>
-																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} class="btn btn-sm btn-success">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
-																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} class="btn btn-sm btn-info">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a href="javascript:void(0);" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} class="btn btn-sm btn-danger">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a href="javascript:void(0);" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-																{!(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck) && (<><span style={{width: 120}} class="btn btn-sm btn-warning" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Pending</span></>)}
+																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} className="btn btn-sm btn-success">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
+																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+																{(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck && employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance?.[cw?.category]?.[week?.week]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+																{!(employeeCompliance?.[cw?.category]?.[week?.week]?.roAck) && (<><span style={{width: 120}} className="btn btn-sm btn-warning" onClick={() => handleROAction(index, cw?.category, week?.week, employeeCompliance?.[cw?.category]?.[week?.week]?.id ?? null)}>Pending</span></>)}
 																</>
 															)}
 															{(employeeCompliance?.[cw?.category]?.[week?.week] ?? null) == null && (
-																<span style={{width: 90}} class="btn btn-sm btn-disabled">Not Required</span>
+																<span style={{width: 90}} className="btn btn-sm btn-disabled">Not Required</span>
 															)}
 														</td>
 														<td className="text-center">
 															{((employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "") !== "") && (															
-																<a target="_blank" href={JSON.parse(employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"}>
+																<a target="_blank" href={JSON.parse(employeeCompliance?.[cw?.category]?.[week?.week]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
 																	Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 																</a>
 															)}
 														</td>
-													</>
+													</React.Fragment>
 												))}
 											</tr>
 											))}
@@ -493,16 +493,16 @@ function Ro() {
 										))}
 									</tr>
 									{complianceCategories?.map((category, index) => (
-										<>
+										<React.Fragment key={index}>
 											<th className="text-center">Self</th>
 											<th className="text-center">RO</th>
 											<th className="text-center">Evidence</th>
-										</>
+										</React.Fragment>
 									))}
 								</thead>
 								<tbody>
 									{employeeCompliances?.map((employeeCompliance, index) => (
-									<tr>
+									<tr key={index}>
 										<td style={{ position: "sticky", left: 0, zIndex: 2, width: "80px", minWidth: "80px", maxWidth: "80px", textAlign: "center",}}>
 											{index + 1} <br />
 											{/* {((employeeCompliance?.selfActionPending ?? 0) > 0) &&
@@ -516,15 +516,15 @@ function Ro() {
 											{employeeCompliance?.Name} <br /> ({employeeCompliance?.GlobalCode})
 										</td>
 										{complianceCategories?.map((category, indexCC) => (
-											<>
+											<React.Fragment key={indexCC}>
 												<td className="text-center fw-bold">
 													{employeeCompliance[category?.category] != null && (
 														<>
 														{((employeeCompliance[category?.category]?.selfAck) && !(employeeCompliance[category?.category]?.roAck)) && (<FaCheck size={20} className="ms-1 text-success" />)}
 														{((employeeCompliance[category?.category]?.selfAck) && (employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
 														{(!(employeeCompliance[category?.category]?.selfAck) && (employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "REVIEWED")) && (<FaCheck size={20} className="ms-1 text-success" />)}
-														{(!(employeeCompliance[category?.category]?.selfAck) && !(employeeCompliance[category?.category]?.roAck)) && (<span style={{width: 90}} class="btn btn-sm btn-info">Pending</span>)}
-														{(!(employeeCompliance[category?.category]?.selfAck) && (employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 120}} class="btn btn-sm btn-info">Pending</span>)}
+														{(!(employeeCompliance[category?.category]?.selfAck) && !(employeeCompliance[category?.category]?.roAck)) && (<span style={{width: 90}} className="btn btn-sm btn-info">Pending</span>)}
+														{(!(employeeCompliance[category?.category]?.selfAck) && (employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK")) && (<span style={{width: 120}} className="btn btn-sm btn-info">Pending</span>)}
 														{(category?.category?.toUpperCase() === "GPS411" && employeeCompliance[category?.category]?.sheet411 != null) && 
 															(
 																<a target="_blank" href={employeeCompliance[category?.category]?.sheet411}>
@@ -535,30 +535,30 @@ function Ro() {
 														</>
 													)}
 													{employeeCompliance[category?.category] == null && (
-														<span style={{width: 90}} class="btn btn-sm btn-disabled">Not Required</span>
+														<span style={{width: 90}} className="btn btn-sm btn-disabled">Not Required</span>
 													)}
 												</td>
 												<td className="text-center">
 													{employeeCompliance[category?.category] != null && (
 														<>
-														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} class="btn btn-sm btn-success">{employeeCompliance[category?.category]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
-														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} class="btn btn-sm btn-info">{employeeCompliance[category?.category]?.roStatus}</span><br /><a href="javascript:void(0);" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} class="btn btn-sm btn-danger">{employeeCompliance[category?.category]?.roStatus}</span><br /><a href="javascript:void(0);" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
-														{!(employeeCompliance[category?.category]?.roAck) && (<><span style={{width: 120}} class="btn btn-sm btn-warning" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Pending</span></>)}
+														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "REVIEWED") && (<><span style={{width: 120}} className="btn btn-sm btn-success">{employeeCompliance[category?.category]?.roStatus}</span></>/*<FaCheck size={20} className="ms-1 text-success" />*/)}
+														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "SEND BACK") && (<><span style={{width: 120}} className="btn btn-sm btn-info">{employeeCompliance[category?.category]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+														{(employeeCompliance[category?.category]?.roAck && employeeCompliance[category?.category]?.roStatus?.toUpperCase() === "NON-COMPLIANCE") && (<><span style={{width: 120}} className="btn btn-sm btn-danger">{employeeCompliance[category?.category]?.roStatus}</span><br /><a role="button" tabIndex={0} className="text-primary" style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Decision Changed ? <FaUndoAlt style={{ fontSize: "10px" }} /></a></>)}
+														{!(employeeCompliance[category?.category]?.roAck) && (<><span style={{width: 120}} className="btn btn-sm btn-warning" onClick={() => handleROAction(index, category?.category, null, employeeCompliance[category?.category]?.id ?? null)}>Pending</span></>)}
 														</>
 													)}
 													{employeeCompliance[category?.category] == null && (
-														<span style={{width: 90}} class="btn btn-sm btn-disabled">Not Required</span>
+														<span style={{width: 90}} className="btn btn-sm btn-disabled">Not Required</span>
 													)}
 												</td>
 												<td className="text-center">
 													{((employeeCompliance[category?.category]?.selfEvidence ?? "") !== "") && (															
-														<a target="_blank" href={JSON.parse(employeeCompliance[category?.category]?.selfEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"}>
+														<a target="_blank" href={JSON.parse(employeeCompliance[category?.category]?.selfEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 													)}
 												</td>
-											</>
+											</React.Fragment>
 										))}
 									</tr>
 									))}
@@ -587,7 +587,7 @@ function Ro() {
 									</thead>
 									<tbody>
 									{employeeCompliances?.map((employeeCompliance, index) => (
-										<tr>
+										<tr key={index}>
 											<td style={{ position: "sticky", left: 0, zIndex: 2, width: "80px", minWidth: "80px", maxWidth: "80px", textAlign: "center",}}>{index + 1}</td>
 											<td style={{ position: "sticky", left: "80px", zIndex: 2, width: "200px", minWidth: "200px", maxWidth: "200px",}}>
 												{employeeCompliance?.name} <br /> ({employeeCompliance?.globalCode})
@@ -600,7 +600,7 @@ function Ro() {
 												{(employeeCompliance?.selfExceptionalAck ?? false) ? (
 													<>
 														Requested By User  <br /> {
-														<a target="_blank" href={JSON.parse(employeeCompliance?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"}>
+														<a target="_blank" href={JSON.parse(employeeCompliance?.selfExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 														}
@@ -614,7 +614,7 @@ function Ro() {
 												{(employeeCompliance?.roExceptionalStatus?.toUpperCase() === "APPROVED") && (
 													<>
 														<br /> {
-														<a target="_blank" href={JSON.parse(employeeCompliance?.roExceptionalEvidence ?? "{}")?.fileUrl ?? "javascript:void(0);"}>
+														<a target="_blank" href={JSON.parse(employeeCompliance?.roExceptionalEvidence ?? "{}")?.fileUrl ?? undefined}>
 															Download <FaCloudArrowDown size={18} className="ms-1 fa-2x text-success" />
 														</a>
 														}
@@ -697,7 +697,7 @@ function Ro() {
 								</div>
 								<div className="form-group text-white">
 									<label style={{color: "#000"}} htmlFor="email">RO Comment:</label>
-									<input type="text" id="RoInput" value={employeeComplianceROInput} onChange={(e) => setEmployeeComplianceROInput(e.target.value)} placeholder="Enter RO Comment" required autoComplete="off" />
+									<input type="text" id="RoInput" value={employeeComplianceROInput ?? ""} onChange={(e) => setEmployeeComplianceROInput(e.target.value)} placeholder="Enter RO Comment" required autoComplete="off" />
 								</div>
 								<button type="submit" className="btn btn-sm btn-success float-end" disabled={isModalFormSubmissionStatus}>
 									{(isModalFormSubmissionStatus) ? "Processing": "Submit"}

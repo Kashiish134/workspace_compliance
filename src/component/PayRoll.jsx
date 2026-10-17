@@ -57,7 +57,7 @@ function Payroll() {
 		} else if(selectedTab == "ROComplianceConversion") {
 			getROComplianceConversion();
 		}
-	}, [selectedMonth, selectedTab, isCompliance]);
+	}, [selectedMonth, selectedTab, isCompliance, userRoles]);
 
 	const getEmployeeComplianceMonthlyFinal = () => {
 		if(Array.isArray(userRoles)) {

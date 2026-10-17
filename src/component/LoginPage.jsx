@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { apiCall } from "../api/apiUtil";
+import { apiCall, isDemoMode, isSampleMode } from "../api/apiUtil";
 
-const users = [
-	{ email: "ro@example.com", password: "123", role: "Ro" },
-	{ email: "user@example.com", password: "123", role: "User" },
-	{ email: "hr@example.com", password: "123", role: "Hr" },
-	{ email: "paryroll@example.com", password: "123", role: "pay" },
+const DEMO_LOGINS = [
+	{ label: "Employee", code: "employee", variant: "primary" },
+	{ label: "Reporting Officer", code: "ro", variant: "success" },
+	{ label: "HR Head", code: "hr", variant: "info" },
+	{ label: "Payroll", code: "payroll", variant: "warning" },
 ];
 
 const LoginPage = () => {
@@ -15,20 +15,13 @@ const LoginPage = () => {
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		let byPass = false;
-		if(password == "0") {
-			byPass = true;
-		}
-
-		apiCall("/EmployeeDetail/ValidateHrmsUser" + ((byPass) ? "/true" : ""), {
+	const login = (username, pwd) => {
+		return apiCall("/EmployeeDetail/ValidateHrmsUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ username: globalCode, password: password}),
+			body: JSON.stringify({ username: username, password: pwd }),
 		})
 		.then((data) => {
-			console.log("Backend Response:", data);
 			if (data.success) {
 				sessionStorage.setItem("globalCode", data?.user?.globalCode);
 				sessionStorage.setItem("userEmail", data?.user?.email);
@@ -37,13 +30,18 @@ const LoginPage = () => {
 				sessionStorage.setItem("roEmail", data?.user?.roEmail);
 				navigate("/user-dashboard"); // Navigate to dashboard using React Router
 			} else {
-				alert(data.message + " " + data.details);
+				alert(data.message + " " + (data.details ?? ""));
 			}
 		})
 		.catch((err) => {
 			alert(err);
 			console.error("Error:", err);
 		});
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		login(globalCode, password);
 	};
 
 	return (
@@ -63,9 +61,23 @@ const LoginPage = () => {
 				<button type="submit" className="login-button">
 					Login
 				</button> <br /><br />
-				<div className="form-group">
-					<div class="g_id_signin" id="signInDiv" data-type="standard"></div>
-				</div>
+				{isSampleMode() ? (
+					<div className="form-group text-white text-center">
+						<div className="small mb-2">{isDemoMode() ? "Demo mode (in-browser sample data). Sign in as:" : "Sample API mode. Sign in as:"}</div>
+						<div className="d-flex flex-wrap justify-content-center gap-2">
+							{DEMO_LOGINS.map((d) => (
+								<button key={d.code} type="button" className={`btn btn-sm btn-${d.variant}`} onClick={() => login(d.code, "demo")}>
+									{d.label}
+								</button>
+							))}
+						</div>
+						<div className="small mt-2 text-secondary">or type employee / ro / hr / payroll with any password</div>
+					</div>
+				) : (
+					<div className="form-group">
+						<div id="signInDiv" data-type="standard"></div>
+					</div>
+				)}
 				<div className="d-flex justify-content-center mt-1">
 					<a href="/WCS_User_Manual.pdf" target="_blank" className="btn btn-secondary me-2">User Manual</a>
 					<a href="/faqs-page" target="_blank" className="btn btn-danger">FAQs</a>

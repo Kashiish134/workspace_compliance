@@ -31,3 +31,6 @@ build/
 .env
 .env.production
 .env.staging
+
+backend/data/
+backend/uploads/
